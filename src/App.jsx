@@ -1,7 +1,18 @@
+import Button from "./components/Button";
+
 const App = () => {
   return (
     <>
-      <h1>Hello World</h1>
+      <div>
+        <h1>How can I help you today?</h1>
+      </div>
+      <div>
+        <Button text="suggestion here" />
+        <Button text="suggestion here" />
+        <Button text="suggestion here" />
+        <Button text="suggestion here" />
+        <input placeholder="message ResilientBot" />
+      </div>
     </>
   );
 };
