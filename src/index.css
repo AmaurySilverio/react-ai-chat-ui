@@ -1,0 +1,12 @@
+.search-container{
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  align-items: center;
+  margin: 0 auto;
+}
+.btn{
+  border-radius: .75rem;
+  border: 0 solid #e3e3e3;
+  box-sizing: border-box;
+}

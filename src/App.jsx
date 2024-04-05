@@ -6,12 +6,20 @@ const App = () => {
       <div>
         <h1>How can I help you today?</h1>
       </div>
-      <div>
-        <Button text="suggestion here" />
-        <Button text="suggestion here" />
-        <Button text="suggestion here" />
-        <Button text="suggestion here" />
-        <input placeholder="message ResilientBot" />
+      <div className="search-container">
+        <div className="btn-container">
+          <div>
+            <Button text="suggestion here" />
+            <Button text="suggestion here" />
+          </div>
+          <div>
+            <Button text="suggestion here" />
+            <Button text="suggestion here" />
+          </div>
+        </div>
+        <div>
+          <input placeholder="message ResilientBot" />
+        </div>
       </div>
     </>
   );
