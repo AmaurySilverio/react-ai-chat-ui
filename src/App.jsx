@@ -1,12 +1,12 @@
 import Button from "./components/Button";
 import Display from "./components/Display";
-import { useState } from "react";
+import Answer from "./components/Answer";
 
+import { useState } from "react";
 const App = () => {
   const [userInput, setUserInput] = useState("");
   const [search, setSearch] = useState([]);
-  const [response, setResponse] = useState("I'm just a bot.");
-  // const response = "I'm just a bot."
+  const [response, setResponse] = useState([]);
   const handleUserInput = (event) => {
     setUserInput(event.target.value);
   };
@@ -18,24 +18,37 @@ const App = () => {
     };
     setSearch(search.concat(newSearch));
     setUserInput("");
+    botResponse();
   };
   const botResponse = () => {
     setTimeout(() => {
-      const response = {
+      const newResponse = {
         content: "I'm just a bot.",
+        id: search.length + 1 + "X",
         question: userInput,
-        id: search.length + 1,
+        userId: search.length + 1 + "Y",
       };
-      // setSearch(search.concat(response));
+      setResponse(response.concat(newResponse));
     }, 3000);
   };
 
   return (
-    <>
+    <div>
       <div>
         <h1>How can I help you today?</h1>
       </div>
-      <Display userInput={search} response={response} />
+      <ul>
+
+        {response.map((input) => (
+          <>
+            <Display key={input.id} response={input.question} />
+            <ul>
+            <Answer key={input.userId} response={input.content} />
+            </ul>
+            </>
+        
+        ))}
+      </ul>
       <div className="search-container">
         {/* <div className="btn-container">
           <div>
@@ -54,8 +67,8 @@ const App = () => {
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
-
 export default App;
+
