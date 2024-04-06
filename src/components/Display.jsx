@@ -1,16 +1,10 @@
-const Display = ({ userInput, response }) => {
-  console.log(userInput);
+const Display = ({response}) =>{
+  console.log("Display", response)
   return (
     <div>
-      <ul>
-        {userInput.map((input) => (
-          <li key={input.id}>
-            {input.content} {response}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
+      <li>{response}</li>
+      </div>
+  )
+}
 export default Display;
+
