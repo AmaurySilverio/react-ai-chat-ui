@@ -1,10 +1,9 @@
-const Display = ({response}) =>{
-  console.log("Display", response)
+const Display = ({ response }) => {
+  console.log("Display", response);
   return (
     <div>
       <li>{response}</li>
-      </div>
-  )
-}
+    </div>
+  );
+};
 export default Display;
-
