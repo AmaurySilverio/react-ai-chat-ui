@@ -10,3 +10,7 @@
   border: 0 solid #e3e3e3;
   box-sizing: border-box;
 }
+body {
+  margin: 0rem;
+  background-color: #000000
+}
