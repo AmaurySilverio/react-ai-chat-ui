@@ -1,20 +1,32 @@
-import {default as Button } from "./components/Button";
+import { default as Button } from "./components/Button";
 import Display from "./components/Display";
 import Answer from "./components/Answer";
 import { useState } from "react";
-import { AppBar, Box, CircularProgress, Input, List, Stack, Typography } from '@mui/material'
+import {
+  AppBar,
+  Box,
+  CircularProgress,
+  Input,
+  List,
+  Stack,
+  Typography,
+} from "@mui/material";
 
 const App = () => {
   const [userInput, setUserInput] = useState("");
   const [search, setSearch] = useState([]);
   const [response, setResponse] = useState([]);
-  const [waiting, setWaiting] = useState(false)
+  const [waiting, setWaiting] = useState(false);
   const [suggestedQuestion, setSuggestedQuestion] = useState("");
   const handleUserInput = (event) => {
     setUserInput(event.target.value);
   };
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    if (userInput < 1) {
+      alert("You Must Type Something First");
+      return;
+    }
     const newSearch = {
       content: userInput,
       id: search.length + 1,
@@ -24,7 +36,7 @@ const App = () => {
     botResponse();
   };
   const botResponse = () => {
-    setWaiting(true)
+    setWaiting(true);
     setTimeout(() => {
       const newResponse = {
         content: "I'm just a bot.",
@@ -33,7 +45,7 @@ const App = () => {
         userId: search.length + 1 + "Y",
       };
       setResponse(response.concat(newResponse));
-      setWaiting(false)
+      setWaiting(false);
     }, 3000);
   };
   const handleButtonInput = () => {
@@ -63,48 +75,70 @@ const App = () => {
     setSuggestedQuestion(buttonText);
     handleButtonInput();
   };
-  
 
   return (
     <div>
-      <AppBar sx={{backgroundColor: "red", fontSize: "3rem", fontWeight: 700, height: "5rem", padding: "1rem", position: "static"}}>Resilient Bot</AppBar>
+      <AppBar
+        sx={{
+          backgroundColor: "red",
+          fontSize: "3rem",
+          fontWeight: 700,
+          height: "5rem",
+          padding: "1rem",
+          position: "static",
+        }}
+      >
+        Resilient Bot
+      </AppBar>
       <div>
-        <Typography
-            sx={{color: "white", padding: "2rem"}}
-            variant="h1">How can I help you today?</Typography>
+        <Typography sx={{ color: "white", padding: "2rem" }} variant="h1">
+          How can I help you today?
+        </Typography>
       </div>
       <Box>
         {waiting ? (
-          <CircularProgress/>
+          <CircularProgress />
         ) : (
-        <ul>
-          {response.map((input) => (
-            <>
-              {console.log("question", input)}
-              <Display key={input.id} response={input.question} sx={{color: "white"}}/>
-              <List>
-                <Answer key={input.userId} response={input.content} />
-              </List>
-            </>
-          ))}
-        </ul>
+          <ul>
+            {response.map((input) => (
+              <>
+                {console.log("question", input)}
+                <Display
+                  key={input.id}
+                  response={input.question}
+                  sx={{ color: "white" }}
+                />
+                <List>
+                  <Answer key={input.userId} response={input.content} />
+                </List>
+              </>
+            ))}
+          </ul>
         )}
       </Box>
       <div className="search-container">
         <div>
           <form onSubmit={handleFormSubmit}>
-            <Stack direction={{ xs: 'column', sm: 'row' }} sx={{margin: "0.5rem"}} spacing={2}>
-              <Input 
-                sx={{ backgroundColor: 'white', padding: "0.25rem", width: "25rem"}}
-                value={userInput} 
-                onChange={handleUserInput} 
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              sx={{ margin: "0.5rem" }}
+              spacing={2}
+            >
+              <Input
+                sx={{
+                  backgroundColor: "white",
+                  padding: "0.25rem",
+                  width: "25rem",
+                }}
+                value={userInput}
+                onChange={handleUserInput}
               />
               <Button text="submit" type="submit" />
             </Stack>
           </form>
         </div>
         <div className="btn-container">
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
             <Button
               text="Give me a fun fact"
               value={suggestedQuestion}
