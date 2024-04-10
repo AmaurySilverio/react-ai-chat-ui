@@ -11,6 +11,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import RestoreIcon from '@mui/icons-material/Restore';
 
 const App = () => {
   const [userInput, setUserInput] = useState("");
@@ -107,12 +108,14 @@ const App = () => {
           position: "static",
         }}
       >
-        Resilient Bot
+        <Stack direction="row" spacing={2} sx={{display: "flex", "align-items": "center"}}>
+          <RestoreIcon onClick={handleNewSearch} sx={{color: "white"}}>
+            New Search Icon
+          </RestoreIcon>
+            <span>Resilient Bot</span>
+          </Stack>
       </AppBar>
       <div>
-        <span className="newSearchIcon" onClick={handleNewSearch}>
-          New Search Icon
-        </span>
         <Typography sx={{ color: "white", padding: "2rem" }} variant="h1">
           How can I help you today?
         </Typography>
@@ -140,7 +143,7 @@ const App = () => {
       </Box>
       <div className="search-and-suggestion-button-container">
         <div className="btn-container">
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+          <Stack direction={{ xs: "column", lg: "row" }} spacing={2}>
             <Button
               text="Give me a fun fact"
               value={suggestedQuestion}
