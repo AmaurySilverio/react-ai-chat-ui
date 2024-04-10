@@ -18,15 +18,22 @@ const App = () => {
   const [response, setResponse] = useState([]);
   const [waiting, setWaiting] = useState(false);
   const [suggestedQuestion, setSuggestedQuestion] = useState("");
+  const [history, setHistory] = useState([]);
   const handleUserInput = (event) => {
     setUserInput(event.target.value);
   };
   const handleFormSubmit = (event) => {
+    console.log(event);
     event.preventDefault();
     if (userInput < 1) {
       alert("You Must Type Something First");
       return;
     }
+    console.log(event.target.parentElement.previousSibling);
+    event.target.parentElement.previousSibling.setAttribute(
+      "data-status",
+      "hidden"
+    );
     const newSearch = {
       content: userInput,
       id: search.length + 1,
@@ -75,7 +82,19 @@ const App = () => {
     setSuggestedQuestion(buttonText);
     handleButtonInput();
   };
-
+  const handleNewSearch = (event) => {
+    let suggestedButtons =
+      event.target.parentNode.offsetParent.firstElementChild.children[0]
+        .children[3].children[0];
+    suggestedButtons.removeAttribute("data-status");
+    console.log("new search");
+    setHistory(history.concat(response));
+    setUserInput("");
+    setSearch([]);
+    setResponse([]);
+    setWaiting(false);
+    setSuggestedQuestion("");
+  };
   return (
     <div>
       <AppBar
@@ -91,6 +110,9 @@ const App = () => {
         Resilient Bot
       </AppBar>
       <div>
+        <span className="newSearchIcon" onClick={handleNewSearch}>
+          New Search Icon
+        </span>
         <Typography sx={{ color: "white", padding: "2rem" }} variant="h1">
           How can I help you today?
         </Typography>
@@ -116,8 +138,21 @@ const App = () => {
           </ul>
         )}
       </Box>
-      <div className="search-container">
-        <div>
+      <div className="search-and-suggestion-button-container">
+        <div className="btn-container">
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+            <Button
+              text="Give me a fun fact"
+              value={suggestedQuestion}
+              onClick={automatedResponseHandler}
+              type="text"
+            />
+            <Button text="What's the weather like today?" />
+            <Button text="When do I have submit my taxes?" />
+            <Button text="Write me a react script" />
+          </Stack>
+        </div>
+        <div className="search-container">
           <form onSubmit={handleFormSubmit}>
             <Stack
               direction={{ xs: "column", sm: "row" }}
@@ -136,19 +171,6 @@ const App = () => {
               <Button text="submit" type="submit" />
             </Stack>
           </form>
-        </div>
-        <div className="btn-container">
-          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-            <Button
-              text="Give me a fun fact"
-              value={suggestedQuestion}
-              onClick={automatedResponseHandler}
-              type="text"
-            />
-            <Button text="What's the weather like today?" />
-            <Button text="When do I have submit my taxes?" />
-            <Button text="Write me a react script" />
-          </Stack>
         </div>
       </div>
     </div>

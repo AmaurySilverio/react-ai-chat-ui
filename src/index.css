@@ -1,4 +1,4 @@
-.search-container{
+.search-and-suggestion-button-container{
   display: flex;
   flex-direction: column;
   width: 80%;
@@ -13,4 +13,16 @@
 body {
   margin: 0rem;
   background-color: #000000
+}
+/* USER INPUT FONT */
+.userInputFont{
+  color: white;
+  list-style-type: none;
+}
+.btn-container[data-status="hidden"]{
+  display: none;
+}
+.newSearchIcon{
+  color:white;
+  cursor: pointer;
 }
