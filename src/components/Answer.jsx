@@ -1,9 +1,10 @@
+import { ListItem } from '@mui/material'
+
 const Answer = ({response}) =>{
     console.log('Answersss', response)
     return(
         <>
-        <li>{response}</li>
-
+        <ListItem sx={{color: "white"}}>{response}</ListItem>
         </>
     )
 }

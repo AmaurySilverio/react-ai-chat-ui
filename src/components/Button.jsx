@@ -1,9 +1,11 @@
-const Button = ({ text, type, value, onClick }) => {
+import { Button } from '@mui/material'
+
+const CustomButton = ({ text, type, value, onClick }) => {
   return (
-    <button className="btn" type={type} value={value} onClick={onClick}>
+    <Button sx={{backgroundColor: "red", "&:focus": {borderColor: "white", borderWidth: "0.1rem", borderStyle: "solid"}, color: "white", fontSize: "1rem", fontWeight: 700}} type={type} value={value} onClick={onClick}>
       {text}
-    </button>
+    </Button>
   );
 };
 
-export default Button;
+export default CustomButton;
