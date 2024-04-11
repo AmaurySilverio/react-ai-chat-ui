@@ -1,12 +1,9 @@
-import { ListItem } from "@mui/material";
-
 const Answer = ({ response }) => {
-  console.log("Answersss", response);
-  return (
-    <>
-      <ListItem sx={{ color: "white" }}>{response}</ListItem>
-    </>
-  );
-};
+    return (
+        <>
+            <li>{response}</li>
+        </>
+    )
+}
 
 export default Answer;
