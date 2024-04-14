@@ -100,7 +100,7 @@ const App = () => {
     <div>
       <AppBar
         sx={{
-          backgroundColor: "red",
+          backgroundColor: "#171717",
           fontSize: "3rem",
           fontWeight: 700,
           height: "5rem",
@@ -112,19 +112,25 @@ const App = () => {
           <RestoreIcon onClick={handleNewSearch} sx={{color: "white"}}>
             New Search Icon
           </RestoreIcon>
-            <span>Resilient Bot</span>
+            <Typography sx={{fontSize: "2rem"}}>Resilient Bot</Typography>
           </Stack>
       </AppBar>
       <div>
-        <Typography sx={{ color: "white", padding: "2rem" }} variant="h1">
+        <Typography sx={{ color: "white", padding: "2rem", fontSize: "3rem"}} variant="h1">
           How can I help you today?
         </Typography>
       </div>
-      <Box>
+      <Box sx={{
+        margin: "0 1rem", mb: 2,
+        display: "flex",
+        flexDirection: "column",
+        height: 300,
+        overflow: "hidden",
+      }}>
         {waiting ? (
-          <CircularProgress />
+          <CircularProgress sx={{color: "LightGray", margin: "0 1rem"}}/>
         ) : (
-          <ul>
+          <>
             {response.map((input) => (
               <>
                 {console.log("question", input)}
@@ -138,23 +144,10 @@ const App = () => {
                 </List>
               </>
             ))}
-          </ul>
+          </>
         )}
       </Box>
       <div className="search-and-suggestion-button-container">
-        <div className="btn-container">
-          <Stack direction={{ xs: "column", lg: "row" }} spacing={2}>
-            <Button
-              text="Give me a fun fact"
-              value={suggestedQuestion}
-              onClick={automatedResponseHandler}
-              type="text"
-            />
-            <Button text="What's the weather like today?" />
-            <Button text="When do I have submit my taxes?" />
-            <Button text="Write me a react script" />
-          </Stack>
-        </div>
         <div className="search-container">
           <form onSubmit={handleFormSubmit}>
             <Stack
@@ -174,6 +167,19 @@ const App = () => {
               <Button text="submit" type="submit" />
             </Stack>
           </form>
+        </div>
+        <div className="btn-container">
+          <Stack direction={{ xs: "column", lg: "row" }} spacing={2}>
+            <Button
+              text="Give me a fun fact"
+              value={suggestedQuestion}
+              onClick={automatedResponseHandler}
+              type="text"
+            />
+            <Button text="What's the weather like today?" />
+            <Button text="When do I have submit my taxes?" />
+            <Button text="Write me a react script" />
+          </Stack>
         </div>
       </div>
     </div>
