@@ -1,5 +1,6 @@
 import { default as Button } from "./components/Button";
 import Display from "./components/Display";
+import CustomButton from "./components/Button"; // Import the CustomButton component
 import Answer from "./components/Answer";
 import { useState } from "react";
 import {
@@ -11,38 +12,52 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import RestoreIcon from '@mui/icons-material/Restore';
 
 const App = () => {
-  const [userInput, setUserInput] = useState("");
-  const [search, setSearch] = useState([]);
-  const [response, setResponse] = useState([]);
-  const [waiting, setWaiting] = useState(false);
-  const [suggestedQuestion, setSuggestedQuestion] = useState("");
-  const [history, setHistory] = useState([]);
+  // State variables
+  const [userInput, setUserInput] = useState(""); // Holds user input
+  const [search, setSearch] = useState([]); // Holds user queries
+  const [response, setResponse] = useState([]); // Holds bot responses
+  const [waiting, setWaiting] = useState(false); // Indicates if bot is processing
+  const [editingMessage, setEditingMessage] = useState(null); // ID of message being edited
+
+  // Event handler for user input change
   const handleUserInput = (event) => {
     setUserInput(event.target.value);
   };
+
+  // Event handler for form submission
   const handleFormSubmit = (event) => {
-    console.log(event);
     event.preventDefault();
-    if (userInput < 1) {
-      alert("You Must Type Something First");
+
+    // Check if user input is empty
+    if (userInput.trim().length === 0) {
+      alert("You must type something first");
       return;
     }
-    console.log(event.target.parentElement.previousSibling);
-    event.target.parentElement.previousSibling.setAttribute(
-      "data-status",
-      "hidden"
-    );
-    const newSearch = {
-      content: userInput,
-      id: search.length + 1,
-    };
-    setSearch(search.concat(newSearch));
+
+    // If editing an existing message
+    if (editingMessage !== null) {
+      const updatedSearch = search.map((entry) =>
+        entry.id === editingMessage ? { ...entry, content: userInput } : entry
+      );
+      setSearch(updatedSearch);
+      setEditingMessage(null);
+    } else {
+      // If adding a new message
+      const newEntry = {
+        content: userInput,
+        id: search.length + 1,
+        botResponse: "I'm just a bot.",
+      };
+      setSearch([...search, newEntry]);
+      botResponse();
+    }
+
     setUserInput("");
-    botResponse();
   };
+
+  // Simulates bot response after a delay
   const botResponse = () => {
     setWaiting(true);
     setTimeout(() => {
@@ -52,52 +67,30 @@ const App = () => {
         question: userInput,
         userId: search.length + 1 + "Y",
       };
-      setResponse(response.concat(newResponse));
+      setResponse([...response, newResponse]);
       setWaiting(false);
     }, 3000);
   };
-  const handleButtonInput = () => {
-    // event.preventDefault();
-    // const buttonText = event.target.textContent;
-    // setSuggestedQuestion(buttonText);
-    // console.log(buttonText, "buttonText");
-    // console.log(event);
-    console.log("response working");
-    const newSearch = {
-      content: suggestedQuestion,
-      id: search.length + 1,
-    };
-    console.log("22suggested", newSearch.content);
-    setSearch(search.concat(newSearch));
-    console.log("suggested", suggestedQuestion);
-    console.log(newSearch, "newsearch");
-    setUserInput("");
-    botResponse();
+
+  // Event handler for editing a message
+  const handleEdit = (id) => {
+    const entryToEdit = search.find((entry) => entry.id === id);
+    setUserInput(entryToEdit.content);
+    setEditingMessage(id);
   };
 
-  const automatedResponseHandler = (event) => {
-    console.log("handlebuttoninput", event.target.textContent);
-
-    console.log(event.target.value, "value");
-    const buttonText = event.target.textContent;
-    setSuggestedQuestion(buttonText);
-    handleButtonInput();
-  };
-  const handleNewSearch = (event) => {
-    let suggestedButtons =
-      event.target.parentNode.offsetParent.firstElementChild.children[0]
-        .children[3].children[0];
-    suggestedButtons.removeAttribute("data-status");
-    console.log("new search");
-    setHistory(history.concat(response));
+  // Event handler for starting a new search session
+  const handleNewSearch = () => {
     setUserInput("");
     setSearch([]);
     setResponse([]);
     setWaiting(false);
-    setSuggestedQuestion("");
   };
+
+  // JSX rendering
   return (
     <div>
+      {/* AppBar */}
       <AppBar
         sx={{
           backgroundColor: "red",
@@ -108,53 +101,70 @@ const App = () => {
           position: "static",
         }}
       >
-        <Stack direction="row" spacing={2} sx={{display: "flex", "align-items": "center"}}>
-          <RestoreIcon onClick={handleNewSearch} sx={{color: "white"}}>
-            New Search Icon
-          </RestoreIcon>
-            <span>Resilient Bot</span>
-          </Stack>
+        Resilient Bot
       </AppBar>
+      
+      {/* New Search Icon */}
       <div>
+        <span className="newSearchIcon" onClick={handleNewSearch}>
+          New Search Icon
+        </span>
         <Typography sx={{ color: "white", padding: "2rem" }} variant="h1">
           How can I help you today?
         </Typography>
       </div>
+      
+      {/* Main Content */}
       <Box>
         {waiting ? (
           <CircularProgress />
         ) : (
           <ul>
-            {response.map((input) => (
-              <>
-                {console.log("question", input)}
-                <Display
-                  key={input.id}
-                  response={input.question}
-                  sx={{ color: "white" }}
-                />
-                <List>
-                  <Answer key={input.userId} response={input.content} />
-                </List>
-              </>
+            {search.map((entry) => (
+              <List key={entry.id}>
+                {editingMessage === entry.id ? (
+                  // Input field for editing
+                  <Input
+                    value={userInput}
+                    onChange={handleUserInput}
+                    autoFocus
+                  />
+                ) : (
+                  // Display user query and bot response
+                  <>
+                    <Display
+                      key={entry.id}
+                      response={entry.content}
+                      sx={{ color: "white" }}
+                    />
+                    <Display
+                      key={`${entry.id}-bot`}
+                      response={entry.botResponse}
+                      sx={{ color: "white" }}
+                    />
+                    {/* Edit button */}
+                    <CustomButton text="Edit" onClick={() => handleEdit(entry.id)} />
+                  </>
+                )}
+              </List>
             ))}
           </ul>
         )}
       </Box>
+      
+      {/* Button Container */}
       <div className="search-and-suggestion-button-container">
         <div className="btn-container">
-          <Stack direction={{ xs: "column", lg: "row" }} spacing={2}>
-            <Button
-              text="Give me a fun fact"
-              value={suggestedQuestion}
-              onClick={automatedResponseHandler}
-              type="text"
-            />
-            <Button text="What's the weather like today?" />
-            <Button text="When do I have submit my taxes?" />
-            <Button text="Write me a react script" />
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+            {/* Suggestion buttons */}
+            <CustomButton text="Give me a fun fact" onClick={() => setUserInput("Give me a fun fact")} type="text" />
+            <CustomButton text="What's the weather like today?" />
+            <CustomButton text="When do I have submit my taxes?" />
+            <CustomButton text="Write me a react script" />
           </Stack>
         </div>
+        
+        {/* Search Container */}
         <div className="search-container">
           <form onSubmit={handleFormSubmit}>
             <Stack
@@ -162,6 +172,7 @@ const App = () => {
               sx={{ margin: "0.5rem" }}
               spacing={2}
             >
+              {/* Input field and Submit button */}
               <Input
                 sx={{
                   backgroundColor: "white",
@@ -171,7 +182,7 @@ const App = () => {
                 value={userInput}
                 onChange={handleUserInput}
               />
-              <Button text="submit" type="submit" />
+              <CustomButton text="Submit" type="submit" />
             </Stack>
           </form>
         </div>
@@ -179,4 +190,5 @@ const App = () => {
     </div>
   );
 };
+
 export default App;
